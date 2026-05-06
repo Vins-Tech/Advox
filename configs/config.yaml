@@ -1,0 +1,75 @@
+# AdVox V2 — Q-Former + Flan-T5 Configuration
+# V2_AdVox_QFormer | Vinay S | April 2026
+
+# ── Paths ──────────────────────────────────────────────
+paths:
+  data_root:        "data/raw"
+  annotations_dir:  "data/annotations"
+  processed_dir:    "data/processed"
+  checkpoints_dir:  "outputs/checkpoints"
+  logs_dir:         "outputs/logs"
+
+# ── Dataset ────────────────────────────────────────────
+dataset:
+  image_size:   224       # ViT-B/16 expects 224x224
+  num_workers:  2         # 2 on Windows — avoids multiprocess bottleneck
+  train_split:  0.95      # 85% train
+  val_split:    0.05      # 15% validation
+
+# ── Model ──────────────────────────────────────────────
+model:
+  # Vision encoder
+  encoder:          "vit_base_patch16_clip_224"   # CLIP pretrained ViT-B/16
+  encoder_dim:      768                           # CLS token output dim
+
+  # Classification heads
+  num_topic_classes:     38
+  num_sentiment_classes: 30
+
+  # Q-Former
+  num_query_tokens:   32      # number of learnable query tokens in Q-Former
+  qformer_hidden_dim: 768     # Q-Former hidden dim — matches BERT-base
+  qformer_num_heads:  12      # attention heads — matches BERT-base
+  qformer_num_layers: 6       # transformer layers (BERT-base has 12 — we use 6, lighter)
+  qformer_ffn_dim:    3072    # feedforward dim inside Q-Former
+
+  # Projection
+  projection_dim:   768       # Linear(768 → 768) — Q-Former space → T5 space
+
+  # Text decoder
+  text_decoder:     "google/flan-t5-base"   # frozen LLM for action + reason
+  max_text_length:  64                      # max tokens for action/reason generation
+
+# ── Training ───────────────────────────────────────────
+training:
+  epochs:           12        # sanity check — change to 30 for full training
+  batch_size:       16        # safe for 8GB VRAM with new arch
+  learning_rate:    0.0001
+  weight_decay:     0.01
+  warmup_epochs:    2         # 1 warmup epoch (reduced from 2 — lighter arch)
+  mixed_precision:  true      # AMP — cuts VRAM usage significantly
+  grad_clip:        1.0       # gradient clipping max norm
+
+# ── Freezing Strategy ──────────────────────────────────
+freezing:
+  freeze_encoder_epochs: 999    # freeze ViT for first 2 epochs, unfreeze from epoch 3
+  freeze_t5: true             # Flan-T5 always frozen — never train LLM weights
+
+# ── Loss Weights (must sum to 1.0) ─────────────────────
+loss_weights:
+  topic:     0.30
+  sentiment: 0.25
+  action:    0.25
+  reason:    0.20
+
+# ── Generation (inference + evaluation) ────────────────
+generation:
+  max_new_tokens:  40         # max tokens to generate at inference
+  num_beams:       4          # beam search width
+  min_new_tokens:  5          # avoid empty/trivial outputs
+
+# ── Logging ────────────────────────────────────────────
+logging:
+  use_wandb:        false     # set true when ready to track runs
+  project_name:     "AdVox_V2"
+  log_every_n_steps: 50
