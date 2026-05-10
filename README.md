@@ -6,9 +6,9 @@ It analyzes advertisement images across four tasks — topic, sentiment, action,
 > 💡 This is the **research version (V4)** of AdVox.
 > For the deployment version, see the links below.
 
-🚀 **Live Demo:** [https://huggingface.co/spaces/Vins-Tech/Advox](https://huggingface.co/spaces/Vins-Tech/Advox)
+🚀 **Live Demo:** [Click here](https://vins-tech-advox.hf.space)
 
-☁️ **Deployment Version:** [https://github.com/Vins-Tech/Advox-deploy](https://github.com/Vins-Tech/Advox-deploy)
+☁️ **Deployment Version:** [Click here](https://huggingface.co/spaces/Vins-Tech/Advox/tree/main)
 
 ---
 
@@ -238,8 +238,8 @@ This repository's license applies only to the original code in this repo.
 
 ## 🔗 Related
 
-- ☁️ **Deployment Version:** [https://github.com/Vins-Tech/Advox-deploy](https://github.com/Vins-Tech/Advox-deploy)
-- 🚀 **Live Demo:** [https://huggingface.co/spaces/Vins-Tech/Advox](https://huggingface.co/spaces/Vins-Tech/Advox)
+- ☁️ **Deployment Version:** [https://huggingface.co/spaces/Vins-Tech/Advox/tree/main](https://huggingface.co/spaces/Vins-Tech/Advox/tree/main)
+- 🚀 **Live Demo:** [https://vins-tech-advox.hf.space](https://vins-tech-advox.hf.space)
 
 ---
 
